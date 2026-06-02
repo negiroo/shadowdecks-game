@@ -106,10 +106,14 @@
 
   /* CARD OPENING SCREEN */
   #open-screen {
+    perspective: none;
     perspective: 1000px;
     background: #000;
     justify-content: center;
     align-items: center;
+  }
+  .perspective-wrapper {
+    perspective: 1000px;
   }
   #open-card {
     width: 180px;
@@ -348,13 +352,15 @@
 
 <!-- PACK OPENING SCREEN -->
 <div id="open-screen" class="screen">
-  <div id="open-card">
-    <div class="card-face card-back-face">
-      <img src="hatulap.png" alt="hátlap" onerror="this.style.background='#1a0000'">
-    </div>
-    <div class="card-face card-front-face">
-      <img id="open-card-img" src="" alt="">
-      <div class="card-name" id="open-card-name"></div>
+  <div class="perspective-wrapper">
+    <div id="open-card">
+      <div class="card-face card-back-face">
+        <img src="hatulap.png" alt="hátlap" onerror="this.style.background='#1a0000'">
+      </div>
+      <div class="card-face card-front-face">
+        <img id="open-card-img" src="" alt="">
+        <div class="card-name" id="open-card-name"></div>
+      </div>
     </div>
   </div>
   <div id="open-result">
@@ -420,7 +426,7 @@
 
 <script>
 const API = 'https://shadowdecks.softmicro285.workers.dev';
-const DISCORD_ID = 'teszt_' + Math.random().toString(36).substr(2,6); // ideiglenes, Discord SDK-val lesz valódi
+const DISCORD_ID = 'teszt_fix_123'; // teszteléshez fix ID
 
 const CARDS = [
   { nev: 'Árnyfutár', kep: 'arnyfutar.png', esely: 250 },
