@@ -373,41 +373,8 @@ let DISCORD_ID = 'teszt_fix_123';
 let discordSdk = null;
 
 async function initDiscord() {
-  // Only run Discord SDK if inside Discord iframe
-  const isInDiscord = window.location.href.includes('discordsays.com') || 
-                      window.location.href.includes('discord.com') ||
-                      window.parent !== window;
-  
-  if (!isInDiscord) {
-    console.log('Teszt mód - nem Discord iframe');
-    return;
-  }
-
-  try {
-    const { DiscordSDK } = await import('https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk@1.4.0/+esm');
-    discordSdk = new DiscordSDK('1511443238559420416');
-    await discordSdk.ready();
-    const { code } = await discordSdk.commands.authorize({
-      client_id: '1511443238559420416',
-      response_type: 'code',
-      state: '',
-      prompt: 'none',
-      scope: ['identify'],
-    });
-    const res = await fetch(`${API}/api/discord-token`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code }),
-    });
-    const { access_token } = await res.json();
-    const auth = await discordSdk.commands.authenticate({ access_token });
-    if (auth?.user?.id) {
-      DISCORD_ID = auth.user.id;
-      console.log('Discord bejelentkezve:', DISCORD_ID);
-    }
-  } catch(e) {
-    console.log('Discord SDK hiba:', e);
-  }
+  // Discord SDK later - most csak teszt ID
+  console.log('Teszt mód, ID:', DISCORD_ID);
 }
 
 const CARDS = [
@@ -748,9 +715,7 @@ document.addEventListener('click', function startOnClick() {
   document.removeEventListener('click', startOnClick);
 }, { once: true });
 
-// Always init the game, Discord SDK is optional
-const discordTimeout = setTimeout(() => { init(); }, 3000);
-initDiscord().then(() => { clearTimeout(discordTimeout); init(); }).catch(() => { clearTimeout(discordTimeout); init(); });
+init();
 </script>
 </body>
 </html>
