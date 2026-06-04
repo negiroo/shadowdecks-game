@@ -406,8 +406,10 @@ async function init() {
   try {
     dbg.textContent = 'Kapcsolódás: ' + API + ' ID:' + DISCORD_ID;
     const res = await fetch(`${API}/api/user?discord_id=${DISCORD_ID}`);
-    dbg.textContent = 'Válasz: ' + res.status;
-    userData = await res.json();
+    dbg.textContent = 'Válasz status: ' + res.status;
+    const rawText = await res.text();
+    dbg.textContent = 'Raw: ' + rawText.substring(0, 100);
+    userData = JSON.parse(rawText);
     dbg.textContent = 'OK - betöltve';
     album = JSON.parse(userData.album);
     updateTimer();
