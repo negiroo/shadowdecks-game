@@ -216,11 +216,75 @@
   .anim-slideup { animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
   .anim-shrink { animation: shrink 0.25s ease-in forwards; }
   .anim-grow { animation: grow 0.25s ease-out forwards; }
+
+  /* AUDIO CONTROLS */
+  #audio-controls {
+    position: fixed;
+    top: 12px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 999;
+    background: rgba(10,0,0,0.7);
+    border: 1px solid #3a0000;
+    border-radius: 20px;
+    padding: 6px 14px;
+  }
+  #mute-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0;
+    color: var(--red);
+    transition: opacity 0.2s;
+  }
+  #mute-btn:hover { opacity: 0.7; }
+  #vol-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 80px;
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(to right, var(--red) 0%, var(--red) 70%, #333 70%);
+    outline: none;
+    cursor: pointer;
+  }
+  #vol-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--red);
+    border: 2px solid #000;
+    cursor: pointer;
+    box-shadow: 0 0 6px #c0181a88;
+  }
+  #vol-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--red);
+    border: 2px solid #000;
+    cursor: pointer;
+  }
 </style>
 </head>
 <body>
 
 <div id="darkness"></div>
+
+<audio id="bgm" src="bgm.mp3" loop></audio>
+
+<div id="audio-controls">
+  <button id="mute-btn" onclick="toggleMute()" title="Némítás">🔊</button>
+  <input id="vol-slider" type="range" min="0" max="100" value="70" oninput="setVolume(this.value)" title="Hangerő">
+</div>
+
+
 
 <!-- MAIN SCREEN -->
 <div id="main-screen" class="screen active">
@@ -519,6 +583,11 @@ async function craft(cardName) {
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  if (id === 'open-screen') {
+    stopMusic();
+  } else if (id === 'main-screen') {
+    startMusic();
+  }
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
@@ -578,6 +647,60 @@ document.getElementById('trade-screen').addEventListener('click', function() {
   populateTradeSelect('trade-my-card');
   populateTradeSelect('trade-accept-card');
 });
+
+
+// AUDIO SYSTEM
+const bgm = document.getElementById('bgm');
+let isMuted = false;
+let targetVolume = 0.7;
+let fadeInterval = null;
+
+bgm.volume = 0;
+
+function startMusic() {
+  if (isMuted) return;
+  clearInterval(fadeInterval);
+  bgm.play().catch(() => {});
+  let v = bgm.volume;
+  fadeInterval = setInterval(() => {
+    v = Math.min(targetVolume, v + 0.02);
+    bgm.volume = v;
+    if (v >= targetVolume) clearInterval(fadeInterval);
+  }, 50);
+}
+
+function stopMusic() {
+  clearInterval(fadeInterval);
+  bgm.pause();
+  bgm.volume = 0;
+}
+
+function toggleMute() {
+  isMuted = !isMuted;
+  const btn = document.getElementById('mute-btn');
+  if (isMuted) {
+    stopMusic();
+    btn.textContent = '🔇';
+    btn.style.textDecoration = 'line-through';
+  } else {
+    btn.textContent = '🔊';
+    btn.style.textDecoration = 'none';
+    startMusic();
+  }
+}
+
+function setVolume(val) {
+  targetVolume = val / 100;
+  if (!isMuted) bgm.volume = targetVolume;
+  const slider = document.getElementById('vol-slider');
+  slider.style.background = `linear-gradient(to right, var(--red) 0%, var(--red) ${val}%, #333 ${val}%)`;
+}
+
+// Start music on first interaction
+document.addEventListener('click', function startOnClick() {
+  startMusic();
+  document.removeEventListener('click', startOnClick);
+}, { once: true });
 
 init();
 </script>
