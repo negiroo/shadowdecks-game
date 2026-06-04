@@ -368,7 +368,9 @@
 </div>
 
 <script>
-const API = 'https://shadowdecks.softmicro285.workers.dev';
+// Discord proxy-n keresztül vagy közvetlenül
+const IS_DISCORD = window.location.hostname.includes('discordsays.com') || window.location.hostname.includes('discord.com');
+const API = IS_DISCORD ? '' : 'https://shadowdecks.softmicro285.workers.dev';
 // Discord SDK
 let DISCORD_ID = 'teszt_fix_123';
 let discordSdk = null;
