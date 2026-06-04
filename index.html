@@ -373,21 +373,20 @@ let DISCORD_ID = 'teszt_fix_123';
 let discordSdk = null;
 
 async function initDiscord() {
+  // Only run Discord SDK if inside Discord iframe
+  const isInDiscord = window.location.href.includes('discordsays.com') || 
+                      window.location.href.includes('discord.com') ||
+                      window.parent !== window;
+  
+  if (!isInDiscord) {
+    console.log('Teszt mód - nem Discord iframe');
+    return;
+  }
+
   try {
     const { DiscordSDK } = await import('https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk@1.4.0/+esm');
     discordSdk = new DiscordSDK('1511443238559420416');
-    
-    // Check if we are inside Discord iframe
-    if (window.self === window.top) {
-      console.log('Nem Discord iframe-ben fut, teszt mód');
-      return;
-    }
-    
-    await Promise.race([
-      discordSdk.ready(),
-      new Promise((_, reject) => setTimeout(() => reject('timeout'), 2000))
-    ]);
-    
+    await discordSdk.ready();
     const { code } = await discordSdk.commands.authorize({
       client_id: '1511443238559420416',
       response_type: 'code',
@@ -407,7 +406,7 @@ async function initDiscord() {
       console.log('Discord bejelentkezve:', DISCORD_ID);
     }
   } catch(e) {
-    console.log('Discord SDK hiba, teszt módban fut:', e);
+    console.log('Discord SDK hiba:', e);
   }
 }
 
