@@ -368,21 +368,41 @@ async function openPack() {
   const darkness = document.getElementById('darkness');
   darkness.style.display = 'block';
   showScreen('open-screen');
-  await sleep(5000);
-  darkness.style.display = 'none';
 
-  try {
-    const res = await fetch(`${API}/api/open`, {
+  // Fetch card and wait 5s at the same time
+  let cardData = null;
+  const [fetchResult] = await Promise.allSettled([
+    fetch(`${API}/api/open`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ discord_id: DISCORD_ID })
+    }).then(r => r.json()),
+    sleep(5000)
+  ]);
+
+  darkness.style.display = 'none';
+
+  if (fetchResult.status === 'rejected' || !fetchResult.value || fetchResult.value.error) {
+    showMain();
+    return;
+  }
+
+  cardData = fetchResult.value;
+  album = cardData.album;
+  userData.last_opened = Math.floor(Date.now() / 1000);
+
+  // Preload the card image before showing
+  const card = CARDS.find(c => c.nev === cardData.kapott);
+  if (card) {
+    await new Promise(resolve => {
+      const img = new Image();
+      img.onload = resolve;
+      img.onerror = resolve;
+      img.src = card.kep;
     });
-    const data = await res.json();
-    if (data.error) { showMain(); return; }
-    album = data.album;
-    userData.last_opened = Math.floor(Date.now() / 1000);
-    showCardReveal(data.kapott);
-  } catch(e) { showMain(); }
+  }
+
+  showCardReveal(cardData.kapott);
 }
 
 async function showCardReveal(cardName) {
