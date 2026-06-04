@@ -584,10 +584,15 @@ async function craft(cardName) {
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  const audioControls = document.getElementById('audio-controls');
   if (id === 'open-screen') {
     stopMusic();
-  } else if (id === 'main-screen') {
-    startMusic();
+    audioControls.style.display = 'none';
+  } else if (id === 'album-screen') {
+    audioControls.style.display = 'none';
+  } else {
+    audioControls.style.display = 'flex';
+    if (id === 'main-screen') startMusic();
   }
 }
 
