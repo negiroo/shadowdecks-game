@@ -370,7 +370,7 @@
 <script>
 // Discord proxy-n keresztül vagy közvetlenül
 const IS_DISCORD = window.location.hostname.includes('discordsays.com') || window.location.hostname.includes('discord.com');
-const API = IS_DISCORD ? '' : 'https://shadowdecks.softmicro285.workers.dev';
+const API = IS_DISCORD ? 'https://' + window.location.hostname : 'https://shadowdecks.softmicro285.workers.dev';
 // Discord SDK
 let DISCORD_ID = 'teszt_fix_123';
 let discordSdk = null;
@@ -404,8 +404,7 @@ let activeTrade = null;
 async function init() {
   const dbg = document.getElementById('debug');
   try {
-    dbg.textContent = 'IS_DISCORD: ' + IS_DISCORD + ' host: ' + window.location.hostname;
-    await sleep(3000);
+    dbg.textContent = 'Kapcsolódás: ' + API;
     const res = await fetch(`${API}/api/user?discord_id=${DISCORD_ID}`);
     dbg.textContent = 'Válasz status: ' + res.status;
     const rawText = await res.text();
