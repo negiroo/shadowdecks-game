@@ -404,11 +404,15 @@ let activeTrade = null;
 async function init() {
   const dbg = document.getElementById('debug');
   try {
-    dbg.textContent = 'Kapcsolódás: ' + API;
-    const res = await fetch(`${API}/api/user?discord_id=${DISCORD_ID}`);
-    dbg.textContent = 'Válasz status: ' + res.status;
+    const url = `${API}/api/user?discord_id=${DISCORD_ID}`;
+    dbg.textContent = 'URL: ' + url;
+    await sleep(2000);
+    const res = await fetch(url);
+    dbg.textContent = 'Status: ' + res.status + ' type: ' + res.type;
+    await sleep(1000);
     const rawText = await res.text();
-    dbg.textContent = 'Raw: ' + rawText.substring(0, 100);
+    dbg.textContent = 'Raw[0-150]: ' + rawText.substring(0, 150);
+    await sleep(3000);
     userData = JSON.parse(rawText);
     dbg.textContent = 'OK - betöltve';
     album = JSON.parse(userData.album);
