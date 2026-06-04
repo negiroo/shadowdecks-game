@@ -290,6 +290,7 @@
 <!-- MAIN SCREEN -->
 <div id="main-screen" class="screen active">
   <div class="header">⚔ Shadow Decks ⚔</div>
+  <div id="debug" style="font-size:11px; color:#ff0; padding:5px; word-break:break-all; max-width:100%;"></div>
   <div class="pack-area">
     <img id="pack-img" src="csomag22.png" alt="Csomag" onclick="openPack()">
     <div id="timer">Betöltés...</div>
@@ -399,13 +400,18 @@ let activeLevel = 1;
 let activeTrade = null;
 
 async function init() {
+  const dbg = document.getElementById('debug');
   try {
+    dbg.textContent = 'Kapcsolódás: ' + API + ' ID:' + DISCORD_ID;
     const res = await fetch(`${API}/api/user?discord_id=${DISCORD_ID}`);
+    dbg.textContent = 'Válasz: ' + res.status;
     userData = await res.json();
+    dbg.textContent = 'OK - betöltve';
     album = JSON.parse(userData.album);
     updateTimer();
     setInterval(updateTimer, 1000);
   } catch(e) {
+    dbg.textContent = 'HIBA: ' + e.message;
     document.getElementById('timer').textContent = 'Kapcsolódási hiba';
   }
 }
