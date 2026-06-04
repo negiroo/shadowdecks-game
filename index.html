@@ -368,7 +368,36 @@
 
 <script>
 const API = 'https://shadowdecks.softmicro285.workers.dev';
-const DISCORD_ID = 'teszt_fix_123';
+// Discord SDK
+let DISCORD_ID = 'teszt_fix_123';
+let discordSdk = null;
+
+async function initDiscord() {
+  try {
+    const { DiscordSDK } = await import('https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk@1.4.0/+esm');
+    discordSdk = new DiscordSDK('1511443238559420416');
+    await discordSdk.ready();
+    const { code } = await discordSdk.commands.authorize({
+      client_id: '1511443238559420416',
+      response_type: 'code',
+      state: '',
+      prompt: 'none',
+      scope: ['identify'],
+    });
+    const res = await fetch(`${API}/api/discord-token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code }),
+    });
+    const { access_token } = await res.json();
+    const auth = await discordSdk.commands.authenticate({ access_token });
+    if (auth?.user?.id) {
+      DISCORD_ID = auth.user.id;
+    }
+  } catch(e) {
+    console.log('Discord SDK nem elérhető, teszt módban fut');
+  }
+}
 
 const CARDS = [
   { nev: 'Árnyfutár', kep: 'arnyfutar.png', esely: 250 },
@@ -708,7 +737,7 @@ document.addEventListener('click', function startOnClick() {
   document.removeEventListener('click', startOnClick);
 }, { once: true });
 
-init();
+initDiscord().then(() => init());
 </script>
 </body>
 </html>
