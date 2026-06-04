@@ -376,7 +376,18 @@ async function initDiscord() {
   try {
     const { DiscordSDK } = await import('https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk@1.4.0/+esm');
     discordSdk = new DiscordSDK('1511443238559420416');
-    await discordSdk.ready();
+    
+    // Check if we are inside Discord iframe
+    if (window.self === window.top) {
+      console.log('Nem Discord iframe-ben fut, teszt mód');
+      return;
+    }
+    
+    await Promise.race([
+      discordSdk.ready(),
+      new Promise((_, reject) => setTimeout(() => reject('timeout'), 2000))
+    ]);
+    
     const { code } = await discordSdk.commands.authorize({
       client_id: '1511443238559420416',
       response_type: 'code',
@@ -393,9 +404,10 @@ async function initDiscord() {
     const auth = await discordSdk.commands.authenticate({ access_token });
     if (auth?.user?.id) {
       DISCORD_ID = auth.user.id;
+      console.log('Discord bejelentkezve:', DISCORD_ID);
     }
   } catch(e) {
-    console.log('Discord SDK nem elérhető, teszt módban fut');
+    console.log('Discord SDK hiba, teszt módban fut:', e);
   }
 }
 
@@ -737,7 +749,9 @@ document.addEventListener('click', function startOnClick() {
   document.removeEventListener('click', startOnClick);
 }, { once: true });
 
-initDiscord().then(() => init());
+// Always init the game, Discord SDK is optional
+const discordTimeout = setTimeout(() => { init(); }, 3000);
+initDiscord().then(() => { clearTimeout(discordTimeout); init(); }).catch(() => { clearTimeout(discordTimeout); init(); });
 </script>
 </body>
 </html>
