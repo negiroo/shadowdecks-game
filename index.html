@@ -22,17 +22,7 @@
   }
   .screen { display: none; min-height: 100vh; }
   .screen.active { display: flex; flex-direction: column; align-items: center; }
-  .header {
-    width: 100%;
-    text-align: center;
-    padding: 20px;
-    font-size: 28px;
-    letter-spacing: 6px;
-    text-transform: uppercase;
-    color: var(--red);
-    text-shadow: 0 0 20px #c0181a88;
-    border-bottom: 1px solid #3a0000;
-  }
+  .header { width: 100%; text-align: center; padding: 20px; font-size: 28px; letter-spacing: 6px; text-transform: uppercase; color: var(--red); text-shadow: 0 0 20px #c0181a88; border-bottom: 1px solid #3a0000; }
   #main-screen { justify-content: space-between; padding-bottom: 40px; }
   .pack-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
   #pack-img { width: 200px; cursor: pointer; transition: transform 0.2s, filter 0.3s; filter: drop-shadow(0 0 20px #c0181a66); }
@@ -40,18 +30,7 @@
   #pack-img.disabled { filter: grayscale(0.8) brightness(0.4); cursor: not-allowed; pointer-events: none; }
   #timer { font-size: 16px; color: var(--red); letter-spacing: 3px; }
   .bottom-btns { width: 100%; display: flex; justify-content: space-between; padding: 0 40px; }
-  .btn {
-    background: linear-gradient(135deg, #1a0000, #3a0000);
-    border: 1px solid var(--red);
-    color: var(--text);
-    padding: 14px 30px;
-    font-size: 14px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.2s;
-    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-  }
+  .btn { background: linear-gradient(135deg, #1a0000, #3a0000); border: 1px solid var(--red); color: var(--text); padding: 14px 30px; font-size: 14px; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%); }
   .btn:hover { background: linear-gradient(135deg, #3a0000, #6b0000); box-shadow: 0 0 15px #c0181a66; color: #fff; }
   .btn-back { background: transparent; border: 1px solid #333; color: #888; padding: 8px 20px; font-size: 12px; letter-spacing: 2px; cursor: pointer; transition: all 0.2s; }
   .btn-back:hover { border-color: var(--red); color: var(--text); }
@@ -62,6 +41,8 @@
   #open-result .rarity { font-size: 12px; letter-spacing: 3px; color: var(--red); margin-bottom: 10px; }
   #open-result .card-title { font-size: 22px; color: var(--text); margin-bottom: 20px; }
   #darkness { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 100; display: none; }
+  #loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
+  #loading-screen .loading-text { color: var(--red); font-size: 14px; letter-spacing: 4px; }
   #album-screen { padding: 0; }
   .album-header { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid #3a0000; }
   .level-tabs { display: flex; gap: 5px; }
@@ -86,11 +67,13 @@
   @keyframes slideUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
   @keyframes shrink { from { transform: scaleX(1); } to { transform: scaleX(0); } }
   @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
   .anim-shake { animation: shake 0.4s ease; }
   .anim-flyup { animation: flyUp 0.6s ease-in forwards; }
   .anim-slideup { animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
   .anim-shrink { animation: shrink 0.25s ease-in forwards; }
   .anim-grow { animation: grow 0.25s ease-out forwards; }
+  .anim-pulse { animation: pulse 1.5s ease infinite; }
   #audio-controls { position: fixed; top: 12px; right: 16px; display: flex; align-items: center; gap: 10px; z-index: 9999; background: rgba(10,0,0,0.95); border: 1px solid #c0181a; border-radius: 20px; padding: 6px 14px; box-shadow: 0 0 10px #00000088; }
   #mute-btn { background: none; border: none; cursor: pointer; font-size: 18px; line-height: 1; padding: 0; color: var(--red); transition: opacity 0.2s; }
   #mute-btn:hover { opacity: 0.7; }
@@ -101,14 +84,21 @@
 <body>
 
 <div id="darkness"></div>
+
+<!-- LOADING SCREEN -->
+<div id="loading-screen">
+  <div class="header" style="border:none;">⚔ Shadow Decks ⚔</div>
+  <div class="loading-text anim-pulse">Betöltés...</div>
+</div>
+
 <audio id="bgm" src="bgm.mp3" loop></audio>
-<div id="audio-controls">
+<div id="audio-controls" style="display:none;">
   <button id="mute-btn" title="Némítás">🔊</button>
   <input id="vol-slider" type="range" min="0" max="100" value="70" title="Hangerő">
 </div>
 
 <!-- MAIN SCREEN -->
-<div id="main-screen" class="screen active">
+<div id="main-screen" class="screen">
   <div class="header">⚔ Shadow Decks ⚔</div>
   <div class="pack-area">
     <img id="pack-img" src="csomag22.png" alt="Csomag">
@@ -209,16 +199,48 @@ let activeTrade = null;
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+async function initDiscord() {
+  if (!IS_DISCORD) return;
+  try {
+    const { DiscordSDK } = await import('https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk@1.4.0/+esm');
+    const sdk = new DiscordSDK('1511443238559420416');
+    await sdk.ready();
+    const { code } = await sdk.commands.authorize({
+      client_id: '1511443238559420416',
+      response_type: 'code',
+      state: '',
+      prompt: 'none',
+      scope: ['identify'],
+    });
+    const res = await fetch(`${API}/api/discord-token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code }),
+    });
+    const { access_token } = await res.json();
+    const auth = await sdk.commands.authenticate({ access_token });
+    if (auth && auth.user && auth.user.id) {
+      DISCORD_ID = auth.user.id;
+    }
+  } catch(e) {
+    console.log('Discord SDK hiba:', e);
+  }
+}
+
 async function init() {
   try {
+    await initDiscord();
     const res = await fetch(`${API}/api/user?discord_id=${DISCORD_ID}`);
     const rawText = await res.text();
     userData = JSON.parse(rawText);
     album = JSON.parse(userData.album);
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('audio-controls').style.display = 'flex';
+    showScreen('main-screen');
     updateTimer();
     setInterval(updateTimer, 1000);
   } catch(e) {
-    document.getElementById('timer').textContent = 'Kapcsolódási hiba';
+    document.querySelector('#loading-screen .loading-text').textContent = 'Kapcsolódási hiba';
   }
 }
 
@@ -420,7 +442,6 @@ function setVolume(val) {
   document.getElementById('vol-slider').style.background = 'linear-gradient(to right, var(--red) 0%, var(--red) ' + val + '%, #333 ' + val + '%)';
 }
 
-// EVENT LISTENERS - no inline onclick
 document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('pack-img').addEventListener('click', openPack);
   document.getElementById('trade-btn').addEventListener('click', function() { populateTradeSelect('trade-my-card'); showScreen('trade-screen'); });
