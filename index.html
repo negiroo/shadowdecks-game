@@ -22,8 +22,6 @@
   }
   .screen { display: none; min-height: 100vh; }
   .screen.active { display: flex; flex-direction: column; align-items: center; }
-
-  /* HEADER */
   .header {
     width: 100%;
     text-align: center;
@@ -35,34 +33,13 @@
     text-shadow: 0 0 20px #c0181a88;
     border-bottom: 1px solid #3a0000;
   }
-
-  /* MAIN SCREEN */
   #main-screen { justify-content: space-between; padding-bottom: 40px; }
-  .pack-area {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-  }
-  #pack-img {
-    width: 200px;
-    cursor: pointer;
-    transition: transform 0.2s, filter 0.3s;
-    filter: drop-shadow(0 0 20px #c0181a66);
-  }
+  .pack-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
+  #pack-img { width: 200px; cursor: pointer; transition: transform 0.2s, filter 0.3s; filter: drop-shadow(0 0 20px #c0181a66); }
   #pack-img:hover { transform: scale(1.05); filter: drop-shadow(0 0 30px #c0181aaa); }
   #pack-img.disabled { filter: grayscale(0.8) brightness(0.4); cursor: not-allowed; pointer-events: none; }
   #timer { font-size: 16px; color: var(--red); letter-spacing: 3px; }
-  .bottom-btns {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 40px;
-  }
-
-  /* BUTTONS */
+  .bottom-btns { width: 100%; display: flex; justify-content: space-between; padding: 0 40px; }
   .btn {
     background: linear-gradient(135deg, #1a0000, #3a0000);
     border: 1px solid var(--red);
@@ -76,228 +53,70 @@
     clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
   }
   .btn:hover { background: linear-gradient(135deg, #3a0000, #6b0000); box-shadow: 0 0 15px #c0181a66; color: #fff; }
-  .btn-back {
-    background: transparent;
-    border: 1px solid #333;
-    color: #888;
-    padding: 8px 20px;
-    font-size: 12px;
-    letter-spacing: 2px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
+  .btn-back { background: transparent; border: 1px solid #333; color: #888; padding: 8px 20px; font-size: 12px; letter-spacing: 2px; cursor: pointer; transition: all 0.2s; }
   .btn-back:hover { border-color: var(--red); color: var(--text); }
-
-  /* CARD OPENING SCREEN */
   #open-screen { background: #000; justify-content: center; align-items: center; gap: 30px; }
-  #open-card {
-    width: 180px;
-    height: 260px;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 2px solid var(--red);
-    box-shadow: 0 0 30px #c0181a66;
-    display: none;
-  }
+  #open-card { width: 180px; height: 260px; border-radius: 8px; overflow: hidden; border: 2px solid var(--red); box-shadow: 0 0 30px #c0181a66; display: none; }
   #open-card img { width: 100%; height: 100%; object-fit: cover; }
   #open-result { text-align: center; display: none; }
   #open-result .rarity { font-size: 12px; letter-spacing: 3px; color: var(--red); margin-bottom: 10px; }
   #open-result .card-title { font-size: 22px; color: var(--text); margin-bottom: 20px; }
-
-  /* DARKNESS */
-  #darkness {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: #000;
-    z-index: 100;
-    display: none;
-  }
-
-  /* ALBUM SCREEN */
+  #darkness { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 100; display: none; }
   #album-screen { padding: 0; }
-  .album-header {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 15px 20px;
-    border-bottom: 1px solid #3a0000;
-  }
+  .album-header { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid #3a0000; }
   .level-tabs { display: flex; gap: 5px; }
-  .tab {
-    background: transparent;
-    border: 1px solid #333;
-    color: #666;
-    padding: 6px 16px;
-    font-size: 12px;
-    letter-spacing: 2px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
+  .tab { background: transparent; border: 1px solid #333; color: #666; padding: 6px 16px; font-size: 12px; letter-spacing: 2px; cursor: pointer; transition: all 0.2s; }
   .tab.active { border-color: var(--red); color: var(--text); background: #1a0000; }
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    padding: 20px;
-    width: 100%;
-    max-width: 700px;
-  }
+  .cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 20px; width: 100%; max-width: 700px; }
   .card-slot { display: flex; flex-direction: column; align-items: center; gap: 6px; position: relative; }
-  .card-slot img {
-    width: 100%;
-    aspect-ratio: 2/3;
-    object-fit: cover;
-    border-radius: 6px;
-    border: 1px solid #333;
-    transition: all 0.2s;
-  }
+  .card-slot img { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 6px; border: 1px solid #333; transition: all 0.2s; }
   .card-slot img.owned { border-color: var(--red); box-shadow: 0 0 10px #c0181a44; }
   .card-slot img.dark { filter: brightness(0.15) grayscale(1); }
   .card-slot .card-label { font-size: 10px; color: #888; text-align: center; letter-spacing: 1px; }
   .card-slot .card-count { font-size: 11px; color: var(--red); font-weight: bold; }
-  .craft-btn {
-    position: absolute;
-    top: 4px; right: 4px;
-    background: var(--red);
-    color: #fff;
-    border: none;
-    font-size: 8px;
-    padding: 3px 5px;
-    cursor: pointer;
-    border-radius: 3px;
-    letter-spacing: 1px;
-    display: none;
-  }
+  .craft-btn { position: absolute; top: 4px; right: 4px; background: var(--red); color: #fff; border: none; font-size: 8px; padding: 3px 5px; cursor: pointer; border-radius: 3px; letter-spacing: 1px; display: none; }
   .card-slot:hover .craft-btn { display: block; }
-
-  /* TRADE SCREEN */
   #trade-screen { padding: 20px; }
   .trade-area { width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 20px; }
   .trade-box { background: #111; border: 1px solid #333; border-radius: 8px; padding: 20px; text-align: center; }
   .trade-box h3 { font-size: 12px; letter-spacing: 3px; color: var(--dim); margin-bottom: 15px; text-transform: uppercase; }
-  .trade-input {
-    background: #0a0a0a;
-    border: 1px solid #333;
-    color: var(--text);
-    padding: 10px;
-    width: 100%;
-    font-size: 13px;
-    margin-bottom: 10px;
-  }
-
-  /* ANIMATIONS */
-  @keyframes shake {
-    0%,100% { transform: translateX(0); }
-    20% { transform: translateX(-8px); }
-    40% { transform: translateX(8px); }
-    60% { transform: translateX(-8px); }
-    80% { transform: translateX(8px); }
-  }
-  @keyframes flyUp {
-    from { transform: translateY(0); opacity: 1; }
-    to { transform: translateY(-150vh); opacity: 0; }
-  }
-  @keyframes slideUp {
-    from { transform: translateY(100px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-  @keyframes shrink {
-    from { transform: scaleX(1); }
-    to { transform: scaleX(0); }
-  }
-  @keyframes grow {
-    from { transform: scaleX(0); }
-    to { transform: scaleX(1); }
-  }
+  .trade-input { background: #0a0a0a; border: 1px solid #333; color: var(--text); padding: 10px; width: 100%; font-size: 13px; margin-bottom: 10px; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-8px); } 40% { transform: translateX(8px); } 60% { transform: translateX(-8px); } 80% { transform: translateX(8px); } }
+  @keyframes flyUp { from { transform: translateY(0); opacity: 1; } to { transform: translateY(-150vh); opacity: 0; } }
+  @keyframes slideUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  @keyframes shrink { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+  @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
   .anim-shake { animation: shake 0.4s ease; }
   .anim-flyup { animation: flyUp 0.6s ease-in forwards; }
   .anim-slideup { animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
   .anim-shrink { animation: shrink 0.25s ease-in forwards; }
   .anim-grow { animation: grow 0.25s ease-out forwards; }
-
-  /* AUDIO CONTROLS */
-  #audio-controls {
-    position: fixed;
-    top: 12px;
-    right: 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    z-index: 9999;
-    background: rgba(10,0,0,0.95);
-    border: 1px solid #c0181a;
-    border-radius: 20px;
-    padding: 6px 14px;
-    box-shadow: 0 0 10px #00000088;
-  }
-  #mute-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    line-height: 1;
-    padding: 0;
-    color: var(--red);
-    transition: opacity 0.2s;
-  }
+  #audio-controls { position: fixed; top: 12px; right: 16px; display: flex; align-items: center; gap: 10px; z-index: 9999; background: rgba(10,0,0,0.95); border: 1px solid #c0181a; border-radius: 20px; padding: 6px 14px; box-shadow: 0 0 10px #00000088; }
+  #mute-btn { background: none; border: none; cursor: pointer; font-size: 18px; line-height: 1; padding: 0; color: var(--red); transition: opacity 0.2s; }
   #mute-btn:hover { opacity: 0.7; }
-  #vol-slider {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 80px;
-    height: 4px;
-    border-radius: 2px;
-    background: linear-gradient(to right, var(--red) 0%, var(--red) 70%, #333 70%);
-    outline: none;
-    cursor: pointer;
-  }
-  #vol-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: var(--red);
-    border: 2px solid #000;
-    cursor: pointer;
-    box-shadow: 0 0 6px #c0181a88;
-  }
-  #vol-slider::-moz-range-thumb {
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: var(--red);
-    border: 2px solid #000;
-    cursor: pointer;
-  }
+  #vol-slider { -webkit-appearance: none; appearance: none; width: 80px; height: 4px; border-radius: 2px; background: linear-gradient(to right, var(--red) 0%, var(--red) 70%, #333 70%); outline: none; cursor: pointer; }
+  #vol-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--red); border: 2px solid #000; cursor: pointer; box-shadow: 0 0 6px #c0181a88; }
 </style>
 </head>
 <body>
 
 <div id="darkness"></div>
-
 <audio id="bgm" src="bgm.mp3" loop></audio>
-
 <div id="audio-controls">
-  <button id="mute-btn" onclick="toggleMute()" title="Némítás">🔊</button>
-  <input id="vol-slider" type="range" min="0" max="100" value="70" oninput="setVolume(this.value)" title="Hangerő">
+  <button id="mute-btn" title="Némítás">🔊</button>
+  <input id="vol-slider" type="range" min="0" max="100" value="70" title="Hangerő">
 </div>
-
-
 
 <!-- MAIN SCREEN -->
 <div id="main-screen" class="screen active">
   <div class="header">⚔ Shadow Decks ⚔</div>
-
   <div class="pack-area">
-    <img id="pack-img" src="csomag22.png" alt="Csomag" onclick="openPack()">
+    <img id="pack-img" src="csomag22.png" alt="Csomag">
     <div id="timer">Betöltés...</div>
   </div>
   <div class="bottom-btns">
-    <button class="btn" onclick="showScreen('trade-screen')">⚔ Trade</button>
-    <button class="btn" onclick="showAlbum()">📖 Album</button>
+    <button class="btn" id="trade-btn">⚔ Trade</button>
+    <button class="btn" id="album-btn">📖 Album</button>
   </div>
 </div>
 
@@ -309,18 +128,18 @@
   <div id="open-result">
     <div class="rarity" id="open-rarity">◆ RITKA ◆</div>
     <div class="card-title" id="open-title"></div>
-    <button class="btn" onclick="showMain()">Folytatás</button>
+    <button class="btn" id="folytas-btn">Folytatás</button>
   </div>
 </div>
 
 <!-- ALBUM SCREEN -->
 <div id="album-screen" class="screen">
   <div class="album-header">
-    <button class="btn-back" onclick="showMain()">← Vissza</button>
+    <button class="btn-back" id="album-vissza-btn">← Vissza</button>
     <div class="level-tabs">
-      <button class="tab active" onclick="setLevel(1)">Level 1</button>
-      <button class="tab" onclick="setLevel(2)">Level 2</button>
-      <button class="tab" onclick="setLevel(3)">Level 3</button>
+      <button class="tab active" id="tab1-btn">Level 1</button>
+      <button class="tab" id="tab2-btn">Level 2</button>
+      <button class="tab" id="tab3-btn">Level 3</button>
     </div>
   </div>
   <div class="cards-grid" id="cards-grid"></div>
@@ -329,7 +148,7 @@
 <!-- TRADE SCREEN -->
 <div id="trade-screen" class="screen">
   <div class="album-header">
-    <button class="btn-back" onclick="showMain()">← Vissza</button>
+    <button class="btn-back" id="trade-vissza-btn">← Vissza</button>
     <div class="header" style="border:none; font-size:18px;">⚔ Trade</div>
     <div style="width:60px"></div>
   </div>
@@ -338,68 +157,57 @@
       <h3>Discord ID akivel tradelsz</h3>
       <input class="trade-input" type="text" id="trade-target-id" placeholder="Discord ID...">
       <h3 style="margin-top:15px;">Melyik kártyádat adod?</h3>
-      <select class="trade-input" id="trade-my-card">
-        <option value="">Válassz kártyát...</option>
-      </select>
+      <select class="trade-input" id="trade-my-card"><option value="">Válassz kártyát...</option></select>
       <select class="trade-input" id="trade-my-level">
         <option value="1">Level 1</option>
         <option value="2">Level 2</option>
         <option value="3">Level 3</option>
       </select>
-      <button class="btn" style="margin-top:10px;" onclick="sendTrade()">Trade küldése</button>
+      <button class="btn" id="send-trade-btn" style="margin-top:10px;">Trade küldése</button>
     </div>
     <div class="trade-box" id="incoming-trade" style="display:none;">
       <h3>Beérkező trade ajánlat</h3>
       <div id="trade-offer-info"></div>
-      <select class="trade-input" id="trade-accept-card" style="margin-top:10px;">
-        <option value="">Válassz kártyát amit adsz...</option>
-      </select>
+      <select class="trade-input" id="trade-accept-card" style="margin-top:10px;"><option value="">Válassz kártyát amit adsz...</option></select>
       <select class="trade-input" id="trade-accept-level">
         <option value="1">Level 1</option>
         <option value="2">Level 2</option>
         <option value="3">Level 3</option>
       </select>
       <div style="display:flex; gap:10px; margin-top:10px; justify-content:center;">
-        <button class="btn" onclick="acceptTrade()">Elfogad</button>
-        <button class="btn-back" onclick="declineTrade()">Elutasít</button>
+        <button class="btn" id="accept-trade-btn">Elfogad</button>
+        <button class="btn-back" id="decline-trade-btn">Elutasít</button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-// Discord proxy-n keresztül vagy közvetlenül
-const IS_DISCORD = window.location.hostname.includes('discordsays.com') || window.location.hostname.includes('discord.com');
+const IS_DISCORD = window.location.hostname.includes('discordsays.com');
 const API = IS_DISCORD ? 'https://' + window.location.hostname : 'https://shadowdecks.softmicro285.workers.dev';
-// Discord SDK
 let DISCORD_ID = 'teszt_fix_123';
-let discordSdk = null;
-
-async function initDiscord() {
-  // Discord SDK later - most csak teszt ID
-  console.log('Teszt mód, ID:', DISCORD_ID);
-}
 
 const CARDS = [
-  { nev: 'Árnyfutár', kep: 'arnyfutar.png', esely: 250 },
-  { nev: 'Árnylovag', kep: 'arnylovag.png', esely: 200 },
-  { nev: 'Árnykardmester', kep: 'arnykardmester.png', esely: 160 },
-  { nev: 'Árnyfejedelem', kep: 'arnyfejedelem.png', esely: 120 },
-  { nev: 'Árnybáró', kep: 'arnybaro.png', esely: 90 },
-  { nev: 'Árnygróf', kep: 'arnygrof.png', esely: 65 },
-  { nev: 'Árnycsászár', kep: 'arnycsaszar.png', esely: 45 },
-  { nev: 'Árnykirály', kep: 'arnykiraly.png', esely: 30 },
-  { nev: 'Sötétség Mestere', kep: 'sotetsegemstere.png', esely: 20 },
-  { nev: 'Árnypróféta', kep: 'arnyprofeta.png', esely: 15 },
-  { nev: 'Árnyak Istene', kep: 'arnyakistene.png', esely: 5 },
+  { nev: 'Árnyfutár', kep: 'arnyfutar.png' },
+  { nev: 'Árnylovag', kep: 'arnylovag.png' },
+  { nev: 'Árnykardmester', kep: 'arnykardmester.png' },
+  { nev: 'Árnyfejedelem', kep: 'arnyfejedelem.png' },
+  { nev: 'Árnybáró', kep: 'arnybaro.png' },
+  { nev: 'Árnygróf', kep: 'arnygrof.png' },
+  { nev: 'Árnycsászár', kep: 'arnycsaszar.png' },
+  { nev: 'Árnykirály', kep: 'arnykiraly.png' },
+  { nev: 'Sötétség Mestere', kep: 'sotetsegemstere.png' },
+  { nev: 'Árnypróféta', kep: 'arnyprofeta.png' },
+  { nev: 'Árnyak Istene', kep: 'arnyakistene.png' },
 ];
-
 const RARITIES = ['Közönséges','Közönséges','Ritka','Ritka','Különleges','Különleges','Epikus','Epikus','Legendás','Legendás','ISTENSÉG'];
 
 let userData = null;
 let album = {};
 let activeLevel = 1;
 let activeTrade = null;
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 async function init() {
   try {
@@ -424,8 +232,7 @@ function updateTimer() {
     packImg.classList.remove('disabled');
   } else {
     const maradek = 30 - diff;
-    const s = maradek.toString();
-    document.getElementById('timer').textContent = `Következő csomag: ${s} mp`;
+    document.getElementById('timer').textContent = 'Következő csomag: ' + maradek + ' mp';
     packImg.classList.add('disabled');
   }
 }
@@ -433,20 +240,14 @@ function updateTimer() {
 async function openPack() {
   const packImg = document.getElementById('pack-img');
   if (packImg.classList.contains('disabled')) return;
-
   packImg.classList.add('anim-shake');
   await sleep(400);
   packImg.classList.remove('anim-shake');
-
   packImg.classList.add('anim-flyup');
   await sleep(600);
-
   const darkness = document.getElementById('darkness');
   darkness.style.display = 'block';
   showScreen('open-screen');
-
-  // Fetch card and wait 5s at the same time
-  let cardData = null;
   const [fetchResult] = await Promise.allSettled([
     fetch(`${API}/api/open`, {
       method: 'POST',
@@ -455,29 +256,17 @@ async function openPack() {
     }).then(r => r.json()),
     sleep(5000)
   ]);
-
   darkness.style.display = 'none';
-
   if (fetchResult.status === 'rejected' || !fetchResult.value || fetchResult.value.error) {
-    showMain();
-    return;
+    showMain(); return;
   }
-
-  cardData = fetchResult.value;
+  const cardData = fetchResult.value;
   album = cardData.album;
   userData.last_opened = Math.floor(Date.now() / 1000);
-
-  // Preload the card image before showing
   const card = CARDS.find(c => c.nev === cardData.kapott);
   if (card) {
-    await new Promise(resolve => {
-      const img = new Image();
-      img.onload = resolve;
-      img.onerror = resolve;
-      img.src = card.kep;
-    });
+    await new Promise(resolve => { const img = new Image(); img.onload = resolve; img.onerror = resolve; img.src = card.kep; });
   }
-
   showCardReveal(cardData.kapott);
 }
 
@@ -486,31 +275,19 @@ async function showCardReveal(cardName) {
   const rarityIdx = CARDS.findIndex(c => c.nev === cardName);
   const openCard = document.getElementById('open-card');
   const openCardImg = document.getElementById('open-card-img');
-
   document.getElementById('open-title').textContent = card.nev;
-  document.getElementById('open-rarity').textContent = `◆ ${RARITIES[rarityIdx]} ◆`;
-
-  // Show hátlap first
+  document.getElementById('open-rarity').textContent = '◆ ' + RARITIES[rarityIdx] + ' ◆';
   openCardImg.src = 'hatulap.png';
   openCard.style.display = 'block';
   openCard.classList.add('anim-slideup');
-
-  // Wait then do flip
   await sleep(800);
-
-  // Shrink
   openCard.classList.add('anim-shrink');
   await sleep(250);
   openCard.classList.remove('anim-shrink');
-
-  // Switch image
   openCardImg.src = card.kep;
-
-  // Grow
   openCard.classList.add('anim-grow');
   await sleep(250);
   openCard.classList.remove('anim-grow');
-
   document.getElementById('open-result').style.display = 'block';
 }
 
@@ -519,20 +296,15 @@ function showMain() {
   packImg.classList.remove('anim-flyup');
   packImg.style.transform = '';
   packImg.style.opacity = '';
-
   const openCard = document.getElementById('open-card');
   openCard.style.display = 'none';
   openCard.classList.remove('anim-slideup', 'anim-shrink', 'anim-grow');
   document.getElementById('open-result').style.display = 'none';
-
   updateTimer();
   showScreen('main-screen');
 }
 
-function showAlbum() {
-  renderAlbum();
-  showScreen('album-screen');
-}
+function showAlbum() { renderAlbum(); showScreen('album-screen'); }
 
 function setLevel(l) {
   activeLevel = l;
@@ -546,47 +318,35 @@ function renderAlbum() {
   CARDS.forEach(card => {
     const kulcs = activeLevel === 1 ? card.nev : card.nev + '_lv' + activeLevel;
     const db = Math.round(album[kulcs] || 0);
-    const owned = db > 0;
-
     const slot = document.createElement('div');
     slot.className = 'card-slot';
-
     const img = document.createElement('img');
     img.src = card.kep;
-    img.className = owned ? 'owned' : 'dark';
+    img.className = db > 0 ? 'owned' : 'dark';
     img.alt = card.nev;
-
     const label = document.createElement('div');
     label.className = 'card-label';
     label.textContent = card.nev;
-
     const count = document.createElement('div');
     count.className = 'card-count';
     count.textContent = db + ' db';
-
     slot.appendChild(img);
     slot.appendChild(label);
     slot.appendChild(count);
-
     if (db >= 10 && activeLevel < 3) {
       const craftBtn = document.createElement('button');
       craftBtn.className = 'craft-btn';
       craftBtn.textContent = 'CRAFT';
-      craftBtn.onclick = () => craft(card.nev);
+      craftBtn.addEventListener('click', () => craft(card.nev));
       slot.appendChild(craftBtn);
     }
-
     grid.appendChild(slot);
   });
 }
 
 async function craft(cardName) {
   try {
-    const res = await fetch(`${API}/api/craft`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ discord_id: DISCORD_ID, kartya: cardName, level: activeLevel })
-    });
+    const res = await fetch(`${API}/api/craft`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ discord_id: DISCORD_ID, kartya: cardName, level: activeLevel }) });
     const data = await res.json();
     if (data.album) { album = data.album; renderAlbum(); }
   } catch(e) {}
@@ -596,30 +356,17 @@ function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   const audioControls = document.getElementById('audio-controls');
-  if (id === 'open-screen') {
-    stopMusic();
-    audioControls.style.display = 'none';
-  } else if (id === 'album-screen') {
-    audioControls.style.display = 'none';
-  } else {
-    audioControls.style.display = 'flex';
-    if (id === 'main-screen') startMusic();
-  }
+  if (id === 'open-screen') { stopMusic(); audioControls.style.display = 'none'; }
+  else if (id === 'album-screen') { audioControls.style.display = 'none'; }
+  else { audioControls.style.display = 'flex'; if (id === 'main-screen') startMusic(); }
 }
-
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 function populateTradeSelect(selectId) {
   const sel = document.getElementById(selectId);
   sel.innerHTML = '<option value="">Válassz kártyát...</option>';
   CARDS.forEach(card => {
     const db = Math.round(album[card.nev] || 0);
-    if (db > 0) {
-      const opt = document.createElement('option');
-      opt.value = card.nev;
-      opt.textContent = `${card.nev} (${db}db)`;
-      sel.appendChild(opt);
-    }
+    if (db > 0) { const opt = document.createElement('option'); opt.value = card.nev; opt.textContent = card.nev + ' (' + db + 'db)'; sel.appendChild(opt); }
   });
 }
 
@@ -629,11 +376,7 @@ async function sendTrade() {
   const myLevel = parseInt(document.getElementById('trade-my-level').value);
   if (!targetId || !myCard) { alert('Töltsd ki az összes mezőt!'); return; }
   try {
-    const res = await fetch(`${API}/api/trade/create`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from_id: DISCORD_ID, to_id: targetId, from_card: myCard, from_level: myLevel })
-    });
+    const res = await fetch(`${API}/api/trade/create`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ from_id: DISCORD_ID, to_id: targetId, from_card: myCard, from_level: myLevel }) });
     const data = await res.json();
     if (data.id) alert('Trade elküldve! ID: ' + data.id);
   } catch(e) { alert('Hiba!'); }
@@ -645,33 +388,17 @@ async function acceptTrade() {
   const toLevel = parseInt(document.getElementById('trade-accept-level').value);
   if (!toCard) { alert('Válassz kártyát!'); return; }
   try {
-    const res = await fetch(`${API}/api/trade/accept`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ trade_id: activeTrade.id, to_card: toCard, to_level: toLevel })
-    });
+    const res = await fetch(`${API}/api/trade/accept`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ trade_id: activeTrade.id, to_card: toCard, to_level: toLevel }) });
     const data = await res.json();
     if (data.ok) { alert('Trade sikeres!'); document.getElementById('incoming-trade').style.display = 'none'; }
   } catch(e) { alert('Hiba!'); }
 }
 
-function declineTrade() {
-  activeTrade = null;
-  document.getElementById('incoming-trade').style.display = 'none';
-}
-
-document.getElementById('trade-screen').addEventListener('click', function() {
-  populateTradeSelect('trade-my-card');
-  populateTradeSelect('trade-accept-card');
-});
-
-
-// AUDIO SYSTEM
+// AUDIO
 const bgm = document.getElementById('bgm');
 let isMuted = false;
 let targetVolume = 0.7;
 let fadeInterval = null;
-
 bgm.volume = 0;
 
 function startMusic() {
@@ -679,47 +406,39 @@ function startMusic() {
   clearInterval(fadeInterval);
   bgm.play().catch(() => {});
   let v = bgm.volume;
-  fadeInterval = setInterval(() => {
-    v = Math.min(targetVolume, v + 0.02);
-    bgm.volume = v;
-    if (v >= targetVolume) clearInterval(fadeInterval);
-  }, 50);
+  fadeInterval = setInterval(() => { v = Math.min(targetVolume, v + 0.02); bgm.volume = v; if (v >= targetVolume) clearInterval(fadeInterval); }, 50);
 }
-
-function stopMusic() {
-  clearInterval(fadeInterval);
-  bgm.pause();
-  bgm.volume = 0;
-}
-
+function stopMusic() { clearInterval(fadeInterval); bgm.pause(); bgm.volume = 0; }
 function toggleMute() {
   isMuted = !isMuted;
   const btn = document.getElementById('mute-btn');
-  if (isMuted) {
-    stopMusic();
-    btn.textContent = '🔇';
-    btn.style.textDecoration = 'line-through';
-  } else {
-    btn.textContent = '🔊';
-    btn.style.textDecoration = 'none';
-    startMusic();
-  }
+  if (isMuted) { stopMusic(); btn.textContent = '🔇'; } else { btn.textContent = '🔊'; startMusic(); }
 }
-
 function setVolume(val) {
   targetVolume = val / 100;
   if (!isMuted) bgm.volume = targetVolume;
-  const slider = document.getElementById('vol-slider');
-  slider.style.background = `linear-gradient(to right, var(--red) 0%, var(--red) ${val}%, #333 ${val}%)`;
+  document.getElementById('vol-slider').style.background = 'linear-gradient(to right, var(--red) 0%, var(--red) ' + val + '%, #333 ' + val + '%)';
 }
 
-// Start music on first interaction
-document.addEventListener('click', function startOnClick() {
-  startMusic();
-  document.removeEventListener('click', startOnClick);
-}, { once: true });
-
-init();
+// EVENT LISTENERS - no inline onclick
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('pack-img').addEventListener('click', openPack);
+  document.getElementById('trade-btn').addEventListener('click', function() { populateTradeSelect('trade-my-card'); showScreen('trade-screen'); });
+  document.getElementById('album-btn').addEventListener('click', showAlbum);
+  document.getElementById('folytas-btn').addEventListener('click', showMain);
+  document.getElementById('album-vissza-btn').addEventListener('click', showMain);
+  document.getElementById('trade-vissza-btn').addEventListener('click', showMain);
+  document.getElementById('tab1-btn').addEventListener('click', function() { setLevel(1); });
+  document.getElementById('tab2-btn').addEventListener('click', function() { setLevel(2); });
+  document.getElementById('tab3-btn').addEventListener('click', function() { setLevel(3); });
+  document.getElementById('send-trade-btn').addEventListener('click', sendTrade);
+  document.getElementById('accept-trade-btn').addEventListener('click', acceptTrade);
+  document.getElementById('decline-trade-btn').addEventListener('click', function() { activeTrade = null; document.getElementById('incoming-trade').style.display = 'none'; });
+  document.getElementById('mute-btn').addEventListener('click', toggleMute);
+  document.getElementById('vol-slider').addEventListener('input', function() { setVolume(this.value); });
+  document.addEventListener('click', function startOnClick() { startMusic(); document.removeEventListener('click', startOnClick); }, { once: true });
+  init();
+});
 </script>
 </body>
 </html>
