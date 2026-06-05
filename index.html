@@ -175,7 +175,8 @@
 <script>
 const IS_DISCORD = window.location.hostname.includes('discordsays.com');
 const API = IS_DISCORD ? 'https://' + window.location.hostname : 'https://shadowdecks.softmicro285.workers.dev';
-let DISCORD_ID = 'teszt_fix_123';
+let DISCORD_ID = localStorage.getItem('test_id') || 'teszt_' + Math.random().toString(36).substr(2,8);
+localStorage.setItem('test_id', DISCORD_ID);
 
 const CARDS = [
   { nev: 'Árnyfutár', kep: 'arnyfutar.png' },
