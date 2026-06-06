@@ -5,145 +5,322 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ShadowDecks</title>
 <style>
-  :root { --red: #c0181a; --darkred: #6b0000; --black: #0a0a0a; --text: #e8d5b0; --dim: #555; }
+  :root {
+    --red: #c0181a;
+    --darkred: #6b0000;
+    --black: #0a0a0a;
+    --text: #e8d5b0;
+    --dim: #555;
+  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: radial-gradient(ellipse at top, #3a0000 0%, #0a0a0a 70%); min-height: 100vh; font-family: 'Georgia', serif; color: var(--text); overflow-x: hidden; }
+  body {
+    background: radial-gradient(ellipse at top, #3a0000 0%, #0a0a0a 70%);
+    min-height: 100vh;
+    font-family: 'Georgia', serif;
+    color: var(--text);
+    overflow-x: hidden;
+  }
   .screen { display: none; min-height: 100vh; }
   .screen.active { display: flex; flex-direction: column; align-items: center; }
-  .header { width: 100%; text-align: center; padding: 20px; font-size: 28px; letter-spacing: 6px; text-transform: uppercase; color: var(--red); text-shadow: 0 0 20px #c0181a88; border-bottom: 1px solid #3a0000; }
+
+  /* HEADER */
+  .header {
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    font-size: 28px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--red);
+    text-shadow: 0 0 20px #c0181a88;
+    border-bottom: 1px solid #3a0000;
+  }
+
+  /* MAIN SCREEN */
   #main-screen { justify-content: space-between; padding-bottom: 40px; }
-  .pack-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
-  #pack-img { width: 200px; cursor: pointer; transition: transform 0.2s, filter 0.3s; filter: drop-shadow(0 0 20px #c0181a66); }
+  .pack-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+  #pack-img {
+    width: 200px;
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.3s;
+    filter: drop-shadow(0 0 20px #c0181a66);
+  }
   #pack-img:hover { transform: scale(1.05); filter: drop-shadow(0 0 30px #c0181aaa); }
   #pack-img.disabled { filter: grayscale(0.8) brightness(0.4); cursor: not-allowed; pointer-events: none; }
   #timer { font-size: 16px; color: var(--red); letter-spacing: 3px; }
-  .bottom-btns { width: 100%; display: flex; justify-content: space-between; padding: 0 40px; }
-  .btn { background: linear-gradient(135deg, #1a0000, #3a0000); border: 1px solid var(--red); color: var(--text); padding: 14px 30px; font-size: 14px; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%); }
+  .bottom-btns {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 40px;
+  }
+
+  /* BUTTONS */
+  .btn {
+    background: linear-gradient(135deg, #1a0000, #3a0000);
+    border: 1px solid var(--red);
+    color: var(--text);
+    padding: 14px 30px;
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
   .btn:hover { background: linear-gradient(135deg, #3a0000, #6b0000); box-shadow: 0 0 15px #c0181a66; color: #fff; }
-  .btn-back { background: transparent; border: 1px solid #333; color: #888; padding: 8px 20px; font-size: 12px; letter-spacing: 2px; cursor: pointer; transition: all 0.2s; }
+  .btn-back {
+    background: transparent;
+    border: 1px solid #333;
+    color: #888;
+    padding: 8px 20px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
   .btn-back:hover { border-color: var(--red); color: var(--text); }
+
+  /* CARD OPENING SCREEN */
   #open-screen { background: #000; justify-content: center; align-items: center; gap: 30px; }
-  #open-card { width: 180px; height: 260px; border-radius: 8px; overflow: hidden; border: 2px solid var(--red); box-shadow: 0 0 30px #c0181a66; display: none; }
+  #open-card {
+    width: 180px;
+    height: 260px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid var(--red);
+    box-shadow: 0 0 30px #c0181a66;
+    display: none;
+  }
   #open-card img { width: 100%; height: 100%; object-fit: cover; }
   #open-result { text-align: center; display: none; }
   #open-result .rarity { font-size: 12px; letter-spacing: 3px; color: var(--red); margin-bottom: 10px; }
   #open-result .card-title { font-size: 22px; color: var(--text); margin-bottom: 20px; }
-  #darkness { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 100; display: none; }
-  #loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
-  #loading-screen .loading-text { color: var(--red); font-size: 14px; letter-spacing: 4px; }
+
+  /* DARKNESS */
+  #darkness {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #000;
+    z-index: 100;
+    display: none;
+  }
+
+  /* ALBUM SCREEN */
   #album-screen { padding: 0; }
-  .album-header { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid #3a0000; }
+  .album-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    border-bottom: 1px solid #3a0000;
+  }
   .level-tabs { display: flex; gap: 5px; }
-  .tab { background: transparent; border: 1px solid #333; color: #666; padding: 6px 16px; font-size: 12px; letter-spacing: 2px; cursor: pointer; transition: all 0.2s; }
+  .tab {
+    background: transparent;
+    border: 1px solid #333;
+    color: #666;
+    padding: 6px 16px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
   .tab.active { border-color: var(--red); color: var(--text); background: #1a0000; }
-  .cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 20px; width: 100%; max-width: 700px; }
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    padding: 20px;
+    width: 100%;
+    max-width: 700px;
+  }
   .card-slot { display: flex; flex-direction: column; align-items: center; gap: 6px; position: relative; }
-  .card-slot img { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 6px; border: 1px solid #333; transition: all 0.2s; }
+  .card-slot img {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #333;
+    transition: all 0.2s;
+  }
   .card-slot img.owned { border-color: var(--red); box-shadow: 0 0 10px #c0181a44; }
   .card-slot img.dark { filter: brightness(0.15) grayscale(1); }
   .card-slot .card-label { font-size: 10px; color: #888; text-align: center; letter-spacing: 1px; }
   .card-slot .card-count { font-size: 11px; color: var(--red); font-weight: bold; }
-  .craft-btn { position: absolute; top: 4px; right: 4px; background: var(--red); color: #fff; border: none; font-size: 8px; padding: 3px 5px; cursor: pointer; border-radius: 3px; letter-spacing: 1px; display: none; }
+  .craft-btn {
+    position: absolute;
+    top: 4px; right: 4px;
+    background: var(--red);
+    color: #fff;
+    border: none;
+    font-size: 8px;
+    padding: 3px 5px;
+    cursor: pointer;
+    border-radius: 3px;
+    letter-spacing: 1px;
+    display: none;
+  }
   .card-slot:hover .craft-btn { display: block; }
 
   /* TRADE SCREEN */
-  #trade-screen { padding: 0; }
-  .trade-players { width: 100%; display: flex; flex-wrap: wrap; gap: 16px; padding: 20px; justify-content: center; }
-  .player-card { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; padding: 12px; border: 1px solid #333; border-radius: 8px; background: #111; transition: all 0.2s; width: 100px; }
-  .player-card:hover { border-color: var(--red); box-shadow: 0 0 10px #c0181a44; }
-  .player-avatar { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--red); object-fit: cover; }
-  .player-name { font-size: 11px; color: #888; text-align: center; }
+  #trade-screen { padding: 20px; }
+  .trade-area { width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 20px; }
+  .trade-box { background: #111; border: 1px solid #333; border-radius: 8px; padding: 20px; text-align: center; }
+  .trade-box h3 { font-size: 12px; letter-spacing: 3px; color: var(--dim); margin-bottom: 15px; text-transform: uppercase; }
+  .trade-input {
+    background: #0a0a0a;
+    border: 1px solid #333;
+    color: var(--text);
+    padding: 10px;
+    width: 100%;
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
 
-  /* TRADE MODAL */
-  #trade-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 500; flex-direction: column; align-items: center; justify-content: center; }
-  #trade-modal.active { display: flex; }
-  .trade-modal-inner { width: 90%; max-width: 500px; background: #0a0a0a; border: 1px solid var(--red); border-radius: 12px; overflow: hidden; }
-  .trade-half { padding: 20px; text-align: center; }
-  .trade-half-top { border-bottom: 1px solid #3a0000; background: #110000; }
-  .trade-half-label { font-size: 11px; letter-spacing: 3px; color: var(--dim); margin-bottom: 12px; text-transform: uppercase; }
-  .trade-card-preview { width: 80px; height: 116px; margin: 0 auto 10px; border-radius: 6px; overflow: hidden; border: 1px solid var(--red); }
-  .trade-card-preview img { width: 100%; height: 100%; object-fit: cover; }
-  .trade-input { background: #0a0a0a; border: 1px solid #333; color: var(--text); padding: 8px; width: 100%; font-size: 12px; margin-bottom: 8px; border-radius: 4px; }
-  .trade-modal-btns { display: flex; gap: 10px; justify-content: center; padding: 16px; border-top: 1px solid #222; }
-
-  /* TRADE INCOMING MODAL */
-  #incoming-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 500; flex-direction: column; align-items: center; justify-content: center; }
-  #incoming-modal.active { display: flex; }
-  .incoming-modal-inner { width: 90%; max-width: 500px; background: #0a0a0a; border: 1px solid var(--red); border-radius: 12px; overflow: hidden; }
-
-  /* TRADE ANIMATION */
-  #trade-anim { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 600; }
-  .trade-anim-card { position: absolute; width: 100px; height: 145px; border-radius: 8px; overflow: hidden; border: 2px solid var(--red); box-shadow: 0 0 20px #c0181a66; }
-  .trade-anim-card img { width: 100%; height: 100%; object-fit: cover; }
-
-  @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-8px); } 40% { transform: translateX(8px); } 60% { transform: translateX(-8px); } 80% { transform: translateX(8px); } }
-  @keyframes flyUp { from { transform: translateY(0); opacity: 1; } to { transform: translateY(-150vh); opacity: 0; } }
-  @keyframes slideUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-  @keyframes shrink { from { transform: scaleX(1); } to { transform: scaleX(0); } }
-  @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-  @keyframes cardSwapDown { 0% { top: 20%; left: 50%; transform: translateX(-50%); } 100% { top: 65%; left: 10%; transform: translateX(0); } }
-  @keyframes cardSwapUp { 0% { top: 65%; left: 10%; transform: translateX(0); } 100% { top: 20%; left: 50%; transform: translateX(-50%); } }
+  /* ANIMATIONS */
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-8px); }
+    80% { transform: translateX(8px); }
+  }
+  @keyframes flyUp {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(-150vh); opacity: 0; }
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes shrink {
+    from { transform: scaleX(1); }
+    to { transform: scaleX(0); }
+  }
+  @keyframes grow {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
   .anim-shake { animation: shake 0.4s ease; }
   .anim-flyup { animation: flyUp 0.6s ease-in forwards; }
   .anim-slideup { animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
   .anim-shrink { animation: shrink 0.25s ease-in forwards; }
   .anim-grow { animation: grow 0.25s ease-out forwards; }
-  .anim-pulse { animation: pulse 1.5s ease infinite; }
 
-  #audio-controls { position: fixed; top: 12px; right: 16px; display: flex; align-items: center; gap: 10px; z-index: 9999; background: rgba(10,0,0,0.95); border: 1px solid #c0181a; border-radius: 20px; padding: 6px 14px; box-shadow: 0 0 10px #00000088; }
-  #mute-btn { background: none; border: none; cursor: pointer; font-size: 18px; line-height: 1; padding: 0; color: var(--red); transition: opacity 0.2s; }
+  /* AUDIO CONTROLS */
+  #audio-controls {
+    position: fixed;
+    top: 12px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 9999;
+    background: rgba(10,0,0,0.95);
+    border: 1px solid #c0181a;
+    border-radius: 20px;
+    padding: 6px 14px;
+    box-shadow: 0 0 10px #00000088;
+  }
+  #mute-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0;
+    color: var(--red);
+    transition: opacity 0.2s;
+  }
   #mute-btn:hover { opacity: 0.7; }
-  #vol-slider { -webkit-appearance: none; appearance: none; width: 80px; height: 4px; border-radius: 2px; background: linear-gradient(to right, var(--red) 0%, var(--red) 70%, #333 70%); outline: none; cursor: pointer; }
-  #vol-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--red); border: 2px solid #000; cursor: pointer; box-shadow: 0 0 6px #c0181a88; }
+  #vol-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 80px;
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(to right, var(--red) 0%, var(--red) 70%, #333 70%);
+    outline: none;
+    cursor: pointer;
+  }
+  #vol-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--red);
+    border: 2px solid #000;
+    cursor: pointer;
+    box-shadow: 0 0 6px #c0181a88;
+  }
+  #vol-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--red);
+    border: 2px solid #000;
+    cursor: pointer;
+  }
 </style>
 </head>
 <body>
 
 <div id="darkness"></div>
 
-<div id="loading-screen">
-  <div class="header" style="border:none;">⚔ Shadow Decks ⚔</div>
-  <div class="loading-text anim-pulse">Betöltés...</div>
+<audio id="bgm" src="bgm.mp3" loop></audio>
+
+<div id="audio-controls">
+  <button id="mute-btn" onclick="toggleMute()" title="Némítás">🔊</button>
+  <input id="vol-slider" type="range" min="0" max="100" value="70" oninput="setVolume(this.value)" title="Hangerő">
 </div>
 
-<audio id="bgm" src="bgm.mp3" loop></audio>
-<div id="audio-controls" style="display:none;">
-  <button id="mute-btn" title="Némítás">🔊</button>
-  <input id="vol-slider" type="range" min="0" max="100" value="70" title="Hangerő">
-</div>
+
 
 <!-- MAIN SCREEN -->
-<div id="main-screen" class="screen">
+<div id="main-screen" class="screen active">
   <div class="header">⚔ Shadow Decks ⚔</div>
+  <div id="debug" style="font-size:11px; color:#ff0; padding:5px; word-break:break-all; max-width:100%;"></div>
   <div class="pack-area">
-    <img id="pack-img" src="csomag22.png" alt="Csomag">
+    <img id="pack-img" src="csomag22.png" alt="Csomag" onclick="openPack()">
     <div id="timer">Betöltés...</div>
   </div>
   <div class="bottom-btns">
-    <button class="btn" id="trade-btn">⚔ Trade</button>
-    <button class="btn" id="album-btn">📖 Album</button>
+    <button class="btn" onclick="showScreen('trade-screen')">⚔ Trade</button>
+    <button class="btn" onclick="showAlbum()">📖 Album</button>
   </div>
 </div>
 
 <!-- PACK OPENING SCREEN -->
 <div id="open-screen" class="screen">
-  <div id="open-card"><img id="open-card-img" src="hatulap.png" alt=""></div>
+  <div id="open-card">
+    <img id="open-card-img" src="hatulap.png" alt="">
+  </div>
   <div id="open-result">
     <div class="rarity" id="open-rarity">◆ RITKA ◆</div>
     <div class="card-title" id="open-title"></div>
-    <button class="btn" id="folytas-btn">Folytatás</button>
+    <button class="btn" onclick="showMain()">Folytatás</button>
   </div>
 </div>
 
 <!-- ALBUM SCREEN -->
 <div id="album-screen" class="screen">
   <div class="album-header">
-    <button class="btn-back" id="album-vissza-btn">← Vissza</button>
+    <button class="btn-back" onclick="showMain()">← Vissza</button>
     <div class="level-tabs">
-      <button class="tab active" id="tab1-btn">Level 1</button>
-      <button class="tab" id="tab2-btn">Level 2</button>
-      <button class="tab" id="tab3-btn">Level 3</button>
+      <button class="tab active" onclick="setLevel(1)">Level 1</button>
+      <button class="tab" onclick="setLevel(2)">Level 2</button>
+      <button class="tab" onclick="setLevel(3)">Level 3</button>
     </div>
   </div>
   <div class="cards-grid" id="cards-grid"></div>
@@ -152,159 +329,98 @@
 <!-- TRADE SCREEN -->
 <div id="trade-screen" class="screen">
   <div class="album-header">
-    <button class="btn-back" id="trade-vissza-btn">← Vissza</button>
+    <button class="btn-back" onclick="showMain()">← Vissza</button>
     <div class="header" style="border:none; font-size:18px;">⚔ Trade</div>
     <div style="width:60px"></div>
   </div>
-  <p style="color:#666; font-size:12px; letter-spacing:2px; margin:20px; text-align:center;">KATTINTS EGY JÁTÉKOSRA A TRADE KÜLDÉSÉHEZ</p>
-  <div class="trade-players" id="trade-players"></div>
-</div>
-
-<!-- TRADE KÜLDÉS MODAL -->
-<div id="trade-modal">
-  <div class="trade-modal-inner">
-    <div class="trade-half trade-half-top">
-      <div class="trade-half-label" id="trade-target-name">Játékos</div>
-      <div class="trade-card-preview"><img src="hatulap.png" id="trade-their-preview" alt=""></div>
-      <p style="font-size:11px; color:#666;">Ő dönti el mit ad cserébe</p>
-    </div>
-    <div class="trade-half">
-      <div class="trade-half-label">Te adsz</div>
-      <div class="trade-card-preview"><img id="trade-my-preview" src="hatulap.png" alt=""></div>
-      <select class="trade-input" id="trade-my-card"><option value="">Válassz kártyát...</option></select>
+  <div class="trade-area" style="margin-top:20px;">
+    <div class="trade-box">
+      <h3>Discord ID akivel tradelsz</h3>
+      <input class="trade-input" type="text" id="trade-target-id" placeholder="Discord ID...">
+      <h3 style="margin-top:15px;">Melyik kártyádat adod?</h3>
+      <select class="trade-input" id="trade-my-card">
+        <option value="">Válassz kártyát...</option>
+      </select>
       <select class="trade-input" id="trade-my-level">
         <option value="1">Level 1</option>
         <option value="2">Level 2</option>
         <option value="3">Level 3</option>
       </select>
+      <button class="btn" style="margin-top:10px;" onclick="sendTrade()">Trade küldése</button>
     </div>
-    <div class="trade-modal-btns">
-      <button class="btn" id="send-trade-btn">Trade küldése</button>
-      <button class="btn-back" id="cancel-trade-btn">Mégse</button>
-    </div>
-  </div>
-</div>
-
-<!-- BEÉRKEZŐ TRADE MODAL -->
-<div id="incoming-modal">
-  <div class="incoming-modal-inner">
-    <div class="trade-half trade-half-top">
-      <div class="trade-half-label">Ő adja neked</div>
-      <div class="trade-card-preview"><img id="incoming-their-card" src="hatulap.png" alt=""></div>
-      <p id="incoming-their-name" style="font-size:12px; color:var(--red);"></p>
-    </div>
-    <div class="trade-half">
-      <div class="trade-half-label">Te adsz cserébe</div>
-      <div class="trade-card-preview"><img id="incoming-my-preview" src="hatulap.png" alt=""></div>
-      <select class="trade-input" id="incoming-my-card"><option value="">Válassz kártyát...</option></select>
-      <select class="trade-input" id="incoming-my-level">
+    <div class="trade-box" id="incoming-trade" style="display:none;">
+      <h3>Beérkező trade ajánlat</h3>
+      <div id="trade-offer-info"></div>
+      <select class="trade-input" id="trade-accept-card" style="margin-top:10px;">
+        <option value="">Válassz kártyát amit adsz...</option>
+      </select>
+      <select class="trade-input" id="trade-accept-level">
         <option value="1">Level 1</option>
         <option value="2">Level 2</option>
         <option value="3">Level 3</option>
       </select>
+      <div style="display:flex; gap:10px; margin-top:10px; justify-content:center;">
+        <button class="btn" onclick="acceptTrade()">Elfogad</button>
+        <button class="btn-back" onclick="declineTrade()">Elutasít</button>
+      </div>
     </div>
-    <div class="trade-modal-btns">
-      <button class="btn" id="accept-trade-btn">Elfogad</button>
-      <button class="btn-back" id="decline-trade-btn">Elutasít</button>
-    </div>
-  </div>
-</div>
-
-<!-- TRADE ANIMÁCIÓ -->
-<div id="trade-anim">
-  <div class="trade-anim-card" id="anim-card-top" style="top:15%; left:50%; transform:translateX(-50%);">
-    <img id="anim-img-top" src="hatulap.png" alt="">
-  </div>
-  <div class="trade-anim-card" id="anim-card-bot" style="top:60%; left:50%; transform:translateX(-50%);">
-    <img id="anim-img-bot" src="hatulap.png" alt="">
   </div>
 </div>
 
 <script>
-const IS_DISCORD = window.location.hostname.includes('discordsays.com');
+// Discord proxy-n keresztül vagy közvetlenül
+const IS_DISCORD = window.location.hostname.includes('discordsays.com') || window.location.hostname.includes('discord.com');
 const API = IS_DISCORD ? 'https://' + window.location.hostname : 'https://shadowdecks.softmicro285.workers.dev';
-let DISCORD_ID = localStorage.getItem('test_id') || 'teszt_' + Math.random().toString(36).substr(2,8);
-localStorage.setItem('test_id', DISCORD_ID);
-
+// Discord SDK
+let DISCORD_ID = 'teszt_fix_123';
 let discordSdk = null;
-let voiceParticipants = []; // hívásban lévők
-let selectedTradeTarget = null;
-let activeTrade = null;
+
+async function initDiscord() {
+  // Discord SDK later - most csak teszt ID
+  console.log('Teszt mód, ID:', DISCORD_ID);
+}
 
 const CARDS = [
-  { nev: 'Árnyfutár', kep: 'arnyfutar.png' },
-  { nev: 'Árnylovag', kep: 'arnylovag.png' },
-  { nev: 'Árnykardmester', kep: 'arnykardmester.png' },
-  { nev: 'Árnyfejedelem', kep: 'arnyfejedelem.png' },
-  { nev: 'Árnybáró', kep: 'arnybaro.png' },
-  { nev: 'Árnygróf', kep: 'arnygrof.png' },
-  { nev: 'Árnycsászár', kep: 'arnycsaszar.png' },
-  { nev: 'Árnykirály', kep: 'arnykiraly.png' },
-  { nev: 'Sötétség Mestere', kep: 'sotetsegemstere.png' },
-  { nev: 'Árnypróféta', kep: 'arnyprofeta.png' },
-  { nev: 'Árnyak Istene', kep: 'arnyakistene.png' },
+  { nev: 'Árnyfutár', kep: 'arnyfutar.png', esely: 250 },
+  { nev: 'Árnylovag', kep: 'arnylovag.png', esely: 200 },
+  { nev: 'Árnykardmester', kep: 'arnykardmester.png', esely: 160 },
+  { nev: 'Árnyfejedelem', kep: 'arnyfejedelem.png', esely: 120 },
+  { nev: 'Árnybáró', kep: 'arnybaro.png', esely: 90 },
+  { nev: 'Árnygróf', kep: 'arnygrof.png', esely: 65 },
+  { nev: 'Árnycsászár', kep: 'arnycsaszar.png', esely: 45 },
+  { nev: 'Árnykirály', kep: 'arnykiraly.png', esely: 30 },
+  { nev: 'Sötétség Mestere', kep: 'sotetsegemstere.png', esely: 20 },
+  { nev: 'Árnypróféta', kep: 'arnyprofeta.png', esely: 15 },
+  { nev: 'Árnyak Istene', kep: 'arnyakistene.png', esely: 5 },
 ];
+
 const RARITIES = ['Közönséges','Közönséges','Ritka','Ritka','Különleges','Különleges','Epikus','Epikus','Legendás','Legendás','ISTENSÉG'];
 
 let userData = null;
 let album = {};
 let activeLevel = 1;
-
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-async function initDiscord() {
-  if (!IS_DISCORD) return;
-  try {
-    const { DiscordSDK } = await import('https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk@1.4.0/+esm');
-    discordSdk = new DiscordSDK('1511443238559420416');
-    await discordSdk.ready();
-    const { code } = await discordSdk.commands.authorize({
-      client_id: '1511443238559420416',
-      response_type: 'code',
-      state: '',
-      prompt: 'none',
-      scope: ['identify', 'rpc.voice.read'],
-    });
-    const res = await fetch(`${API}/api/discord-token`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code }),
-    });
-    const { access_token } = await res.json();
-    const auth = await discordSdk.commands.authenticate({ access_token });
-    if (auth && auth.user && auth.user.id) {
-      DISCORD_ID = auth.user.id;
-    }
-    // Hívásban lévők lekérése
-    try {
-      const channel = await discordSdk.commands.getChannel({ channel_id: discordSdk.channelId });
-      if (channel && channel.voice_states) {
-        voiceParticipants = channel.voice_states
-          .filter(vs => vs.user && vs.user.id !== DISCORD_ID)
-          .map(vs => ({ id: vs.user.id, username: vs.user.username, avatar: vs.user.avatar }));
-      }
-    } catch(e) {}
-  } catch(e) {
-    console.log('Discord SDK hiba:', e);
-  }
-}
+let activeTrade = null;
 
 async function init() {
+  const dbg = document.getElementById('debug');
   try {
-    await initDiscord();
-    const res = await fetch(`${API}/api/user?discord_id=${DISCORD_ID}`);
+    const url = `${API}/api/user?discord_id=${DISCORD_ID}`;
+    dbg.textContent = 'URL: ' + url;
+    await sleep(2000);
+    const res = await fetch(url);
+    dbg.textContent = 'Status: ' + res.status + ' type: ' + res.type;
+    await sleep(1000);
     const rawText = await res.text();
+    dbg.textContent = 'Raw[0-150]: ' + rawText.substring(0, 150);
+    await sleep(3000);
     userData = JSON.parse(rawText);
+    dbg.textContent = 'OK - betöltve';
     album = JSON.parse(userData.album);
-    document.getElementById('loading-screen').style.display = 'none';
-    document.getElementById('audio-controls').style.display = 'flex';
-    showScreen('main-screen');
     updateTimer();
     setInterval(updateTimer, 1000);
-    // Beérkező trade-ek figyelése
-    setInterval(checkIncomingTrades, 8000);
   } catch(e) {
-    document.querySelector('#loading-screen .loading-text').textContent = 'Kapcsolódási hiba';
+    dbg.textContent = 'HIBA: ' + e.message;
+    document.getElementById('timer').textContent = 'Kapcsolódási hiba';
   }
 }
 
@@ -318,7 +434,8 @@ function updateTimer() {
     packImg.classList.remove('disabled');
   } else {
     const maradek = 30 - diff;
-    document.getElementById('timer').textContent = 'Következő csomag: ' + maradek + ' mp';
+    const s = maradek.toString();
+    document.getElementById('timer').textContent = `Következő csomag: ${s} mp`;
     packImg.classList.add('disabled');
   }
 }
@@ -326,25 +443,51 @@ function updateTimer() {
 async function openPack() {
   const packImg = document.getElementById('pack-img');
   if (packImg.classList.contains('disabled')) return;
+
   packImg.classList.add('anim-shake');
   await sleep(400);
   packImg.classList.remove('anim-shake');
+
   packImg.classList.add('anim-flyup');
   await sleep(600);
+
   const darkness = document.getElementById('darkness');
   darkness.style.display = 'block';
   showScreen('open-screen');
+
+  // Fetch card and wait 5s at the same time
+  let cardData = null;
   const [fetchResult] = await Promise.allSettled([
-    fetch(`${API}/api/open`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ discord_id: DISCORD_ID }) }).then(r => r.json()),
+    fetch(`${API}/api/open`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ discord_id: DISCORD_ID })
+    }).then(r => r.json()),
     sleep(5000)
   ]);
+
   darkness.style.display = 'none';
-  if (fetchResult.status === 'rejected' || !fetchResult.value || fetchResult.value.error) { showMain(); return; }
-  const cardData = fetchResult.value;
+
+  if (fetchResult.status === 'rejected' || !fetchResult.value || fetchResult.value.error) {
+    showMain();
+    return;
+  }
+
+  cardData = fetchResult.value;
   album = cardData.album;
   userData.last_opened = Math.floor(Date.now() / 1000);
+
+  // Preload the card image before showing
   const card = CARDS.find(c => c.nev === cardData.kapott);
-  if (card) { await new Promise(resolve => { const img = new Image(); img.onload = resolve; img.onerror = resolve; img.src = card.kep; }); }
+  if (card) {
+    await new Promise(resolve => {
+      const img = new Image();
+      img.onload = resolve;
+      img.onerror = resolve;
+      img.src = card.kep;
+    });
+  }
+
   showCardReveal(cardData.kapott);
 }
 
@@ -353,19 +496,31 @@ async function showCardReveal(cardName) {
   const rarityIdx = CARDS.findIndex(c => c.nev === cardName);
   const openCard = document.getElementById('open-card');
   const openCardImg = document.getElementById('open-card-img');
+
   document.getElementById('open-title').textContent = card.nev;
-  document.getElementById('open-rarity').textContent = '◆ ' + RARITIES[rarityIdx] + ' ◆';
+  document.getElementById('open-rarity').textContent = `◆ ${RARITIES[rarityIdx]} ◆`;
+
+  // Show hátlap first
   openCardImg.src = 'hatulap.png';
   openCard.style.display = 'block';
   openCard.classList.add('anim-slideup');
+
+  // Wait then do flip
   await sleep(800);
+
+  // Shrink
   openCard.classList.add('anim-shrink');
   await sleep(250);
   openCard.classList.remove('anim-shrink');
+
+  // Switch image
   openCardImg.src = card.kep;
+
+  // Grow
   openCard.classList.add('anim-grow');
   await sleep(250);
   openCard.classList.remove('anim-grow');
+
   document.getElementById('open-result').style.display = 'block';
 }
 
@@ -374,15 +529,20 @@ function showMain() {
   packImg.classList.remove('anim-flyup');
   packImg.style.transform = '';
   packImg.style.opacity = '';
+
   const openCard = document.getElementById('open-card');
   openCard.style.display = 'none';
   openCard.classList.remove('anim-slideup', 'anim-shrink', 'anim-grow');
   document.getElementById('open-result').style.display = 'none';
+
   updateTimer();
   showScreen('main-screen');
 }
 
-function showAlbum() { renderAlbum(); showScreen('album-screen'); }
+function showAlbum() {
+  renderAlbum();
+  showScreen('album-screen');
+}
 
 function setLevel(l) {
   activeLevel = l;
@@ -396,67 +556,68 @@ function renderAlbum() {
   CARDS.forEach(card => {
     const kulcs = activeLevel === 1 ? card.nev : card.nev + '_lv' + activeLevel;
     const db = Math.round(album[kulcs] || 0);
+    const owned = db > 0;
+
     const slot = document.createElement('div');
     slot.className = 'card-slot';
+
     const img = document.createElement('img');
     img.src = card.kep;
-    img.className = db > 0 ? 'owned' : 'dark';
+    img.className = owned ? 'owned' : 'dark';
     img.alt = card.nev;
+
     const label = document.createElement('div');
     label.className = 'card-label';
     label.textContent = card.nev;
+
     const count = document.createElement('div');
     count.className = 'card-count';
     count.textContent = db + ' db';
+
     slot.appendChild(img);
     slot.appendChild(label);
     slot.appendChild(count);
+
     if (db >= 10 && activeLevel < 3) {
       const craftBtn = document.createElement('button');
       craftBtn.className = 'craft-btn';
       craftBtn.textContent = 'CRAFT';
-      craftBtn.addEventListener('click', () => craft(card.nev));
+      craftBtn.onclick = () => craft(card.nev);
       slot.appendChild(craftBtn);
     }
+
     grid.appendChild(slot);
   });
 }
 
 async function craft(cardName) {
   try {
-    const res = await fetch(`${API}/api/craft`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ discord_id: DISCORD_ID, kartya: cardName, level: activeLevel }) });
+    const res = await fetch(`${API}/api/craft`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ discord_id: DISCORD_ID, kartya: cardName, level: activeLevel })
+    });
     const data = await res.json();
     if (data.album) { album = data.album; renderAlbum(); }
   } catch(e) {}
 }
 
-// TRADE RENDSZER
-function showTradeScreen() {
-  const container = document.getElementById('trade-players');
-  container.innerHTML = '';
-  if (voiceParticipants.length === 0) {
-    container.innerHTML = '<p style="color:#666; font-size:13px; text-align:center;">Nincs más játékos a hívásban</p>';
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const audioControls = document.getElementById('audio-controls');
+  if (id === 'open-screen') {
+    stopMusic();
+    audioControls.style.display = 'none';
+  } else if (id === 'album-screen') {
+    audioControls.style.display = 'none';
   } else {
-    voiceParticipants.forEach(p => {
-      const card = document.createElement('div');
-      card.className = 'player-card';
-      const avatarUrl = p.avatar
-        ? `https://cdn.discordapp.com/avatars/${p.id}/${p.avatar}.png?size=64`
-        : `https://cdn.discordapp.com/embed/avatars/0.png`;
-      card.innerHTML = `<img class="player-avatar" src="${avatarUrl}" alt=""><span class="player-name">${p.username}</span>`;
-      card.addEventListener('click', () => openTradeModal(p));
-      container.appendChild(card);
-    });
+    audioControls.style.display = 'flex';
+    if (id === 'main-screen') startMusic();
   }
-  showScreen('trade-screen');
 }
 
-function openTradeModal(player) {
-  selectedTradeTarget = player;
-  document.getElementById('trade-target-name').textContent = player.username + ' játékosnak';
-  populateTradeSelect('trade-my-card');
-  document.getElementById('trade-modal').classList.add('active');
-}
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 function populateTradeSelect(selectId) {
   const sel = document.getElementById(selectId);
@@ -466,79 +627,32 @@ function populateTradeSelect(selectId) {
     if (db > 0) {
       const opt = document.createElement('option');
       opt.value = card.nev;
-      opt.textContent = card.nev + ' (' + db + 'db)';
+      opt.textContent = `${card.nev} (${db}db)`;
       sel.appendChild(opt);
     }
   });
 }
 
-// Kártya előnézet frissítése
-function updateMyPreview() {
-  const sel = document.getElementById('trade-my-card');
-  const card = CARDS.find(c => c.nev === sel.value);
-  document.getElementById('trade-my-preview').src = card ? card.kep : 'hatulap.png';
-}
-
-function updateIncomingMyPreview() {
-  const sel = document.getElementById('incoming-my-card');
-  const card = CARDS.find(c => c.nev === sel.value);
-  document.getElementById('incoming-my-preview').src = card ? card.kep : 'hatulap.png';
-}
-
 async function sendTrade() {
-  if (!selectedTradeTarget) return;
+  const targetId = document.getElementById('trade-target-id').value.trim();
   const myCard = document.getElementById('trade-my-card').value;
   const myLevel = parseInt(document.getElementById('trade-my-level').value);
-  if (!myCard) { alert('Válassz kártyát!'); return; }
+  if (!targetId || !myCard) { alert('Töltsd ki az összes mezőt!'); return; }
   try {
     const res = await fetch(`${API}/api/trade/create`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from_id: DISCORD_ID, to_id: selectedTradeTarget.id, from_card: myCard, from_level: myLevel })
+      body: JSON.stringify({ from_id: DISCORD_ID, to_id: targetId, from_card: myCard, from_level: myLevel })
     });
     const data = await res.json();
-    if (data.id) {
-      document.getElementById('trade-modal').classList.remove('active');
-      alert('Trade ajánlat elküldve ' + selectedTradeTarget.username + ' játékosnak!');
-    }
+    if (data.id) alert('Trade elküldve! ID: ' + data.id);
   } catch(e) { alert('Hiba!'); }
-}
-
-async function checkIncomingTrades() {
-  if (document.getElementById('incoming-modal').classList.contains('active')) return;
-  try {
-    const res = await fetch(`${API}/api/trade/incoming?discord_id=${DISCORD_ID}`);
-    const trades = await res.json();
-    if (trades && trades.length > 0) {
-      const trade = trades[0];
-      activeTrade = trade;
-      const card = CARDS.find(c => c.nev === trade.from_card);
-      document.getElementById('incoming-their-card').src = card ? card.kep : 'hatulap.png';
-      document.getElementById('incoming-their-name').textContent = trade.from_card + ' (Lv' + trade.from_level + ')';
-      populateIncomingSelect();
-      document.getElementById('incoming-modal').classList.add('active');
-    }
-  } catch(e) {}
-}
-
-function populateIncomingSelect() {
-  const sel = document.getElementById('incoming-my-card');
-  sel.innerHTML = '<option value="">Válassz kártyát...</option>';
-  CARDS.forEach(card => {
-    const db = Math.round(album[card.nev] || 0);
-    if (db > 0) {
-      const opt = document.createElement('option');
-      opt.value = card.nev;
-      opt.textContent = card.nev + ' (' + db + 'db)';
-      sel.appendChild(opt);
-    }
-  });
 }
 
 async function acceptTrade() {
   if (!activeTrade) return;
-  const toCard = document.getElementById('incoming-my-card').value;
-  const toLevel = parseInt(document.getElementById('incoming-my-level').value);
+  const toCard = document.getElementById('trade-accept-card').value;
+  const toLevel = parseInt(document.getElementById('trade-accept-level').value);
   if (!toCard) { alert('Válassz kártyát!'); return; }
   try {
     const res = await fetch(`${API}/api/trade/accept`, {
@@ -547,102 +661,75 @@ async function acceptTrade() {
       body: JSON.stringify({ trade_id: activeTrade.id, to_card: toCard, to_level: toLevel })
     });
     const data = await res.json();
-    if (data.ok) {
-      document.getElementById('incoming-modal').classList.remove('active');
-      const theirCard = CARDS.find(c => c.nev === activeTrade.from_card);
-      const myCard = CARDS.find(c => c.nev === toCard);
-      await playTradeAnimation(theirCard ? theirCard.kep : 'hatulap.png', myCard ? myCard.kep : 'hatulap.png');
-      // Album frissítése
-      const userRes = await fetch(`${API}/api/user?discord_id=${DISCORD_ID}`);
-      const userData2 = await userRes.json();
-      album = JSON.parse(userData2.album);
-      activeTrade = null;
-    }
+    if (data.ok) { alert('Trade sikeres!'); document.getElementById('incoming-trade').style.display = 'none'; }
   } catch(e) { alert('Hiba!'); }
 }
 
-async function declineTrade() {
-  if (!activeTrade) return;
-  try {
-    await fetch(`${API}/api/trade/decline`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ trade_id: activeTrade.id })
-    });
-  } catch(e) {}
+function declineTrade() {
   activeTrade = null;
-  document.getElementById('incoming-modal').classList.remove('active');
+  document.getElementById('incoming-trade').style.display = 'none';
 }
 
-async function playTradeAnimation(topCardSrc, botCardSrc) {
-  const anim = document.getElementById('trade-anim');
-  const topCard = document.getElementById('anim-card-top');
-  const botCard = document.getElementById('anim-card-bot');
-  document.getElementById('anim-img-top').src = topCardSrc;
-  document.getElementById('anim-img-bot').src = botCardSrc;
+document.getElementById('trade-screen').addEventListener('click', function() {
+  populateTradeSelect('trade-my-card');
+  populateTradeSelect('trade-accept-card');
+});
 
-  topCard.style.cssText = 'top:15%; left:50%; transform:translateX(-50%); transition:none;';
-  botCard.style.cssText = 'top:60%; left:50%; transform:translateX(-50%); transition:none;';
-  anim.style.display = 'block';
-  await sleep(200);
 
-  // Animáció: felső ívesen lejön balra, alsó ívesen felmegy jobbra
-  topCard.style.transition = 'top 0.8s cubic-bezier(0.4,0,0.2,1), left 0.8s cubic-bezier(0.4,0,0.2,1), transform 0.8s';
-  botCard.style.transition = 'top 0.8s cubic-bezier(0.4,0,0.2,1), left 0.8s cubic-bezier(0.4,0,0.2,1), transform 0.8s';
-
-  topCard.style.top = '60%';
-  topCard.style.left = '10%';
-  topCard.style.transform = 'translateX(0)';
-
-  botCard.style.top = '15%';
-  botCard.style.left = '80%';
-  botCard.style.transform = 'translateX(-100%)';
-
-  await sleep(1000);
-  anim.style.display = 'none';
-}
-
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  const audioControls = document.getElementById('audio-controls');
-  if (id === 'open-screen') { stopMusic(); audioControls.style.display = 'none'; }
-  else if (id === 'album-screen') { audioControls.style.display = 'none'; }
-  else { audioControls.style.display = 'flex'; if (id === 'main-screen') startMusic(); }
-}
-
-// AUDIO
+// AUDIO SYSTEM
 const bgm = document.getElementById('bgm');
 let isMuted = false;
 let targetVolume = 0.7;
 let fadeInterval = null;
-bgm.volume = 0;
-function startMusic() { if (isMuted) return; clearInterval(fadeInterval); bgm.play().catch(() => {}); let v = bgm.volume; fadeInterval = setInterval(() => { v = Math.min(targetVolume, v + 0.02); bgm.volume = v; if (v >= targetVolume) clearInterval(fadeInterval); }, 50); }
-function stopMusic() { clearInterval(fadeInterval); bgm.pause(); bgm.volume = 0; }
-function toggleMute() { isMuted = !isMuted; const btn = document.getElementById('mute-btn'); if (isMuted) { stopMusic(); btn.textContent = '🔇'; } else { btn.textContent = '🔊'; startMusic(); } }
-function setVolume(val) { targetVolume = val / 100; if (!isMuted) bgm.volume = targetVolume; document.getElementById('vol-slider').style.background = 'linear-gradient(to right, var(--red) 0%, var(--red) ' + val + '%, #333 ' + val + '%)'; }
 
-document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('pack-img').addEventListener('click', openPack);
-  document.getElementById('trade-btn').addEventListener('click', showTradeScreen);
-  document.getElementById('album-btn').addEventListener('click', showAlbum);
-  document.getElementById('folytas-btn').addEventListener('click', showMain);
-  document.getElementById('album-vissza-btn').addEventListener('click', showMain);
-  document.getElementById('trade-vissza-btn').addEventListener('click', showMain);
-  document.getElementById('tab1-btn').addEventListener('click', function() { setLevel(1); });
-  document.getElementById('tab2-btn').addEventListener('click', function() { setLevel(2); });
-  document.getElementById('tab3-btn').addEventListener('click', function() { setLevel(3); });
-  document.getElementById('send-trade-btn').addEventListener('click', sendTrade);
-  document.getElementById('cancel-trade-btn').addEventListener('click', function() { document.getElementById('trade-modal').classList.remove('active'); });
-  document.getElementById('accept-trade-btn').addEventListener('click', acceptTrade);
-  document.getElementById('decline-trade-btn').addEventListener('click', declineTrade);
-  document.getElementById('mute-btn').addEventListener('click', toggleMute);
-  document.getElementById('vol-slider').addEventListener('input', function() { setVolume(this.value); });
-  document.getElementById('trade-my-card').addEventListener('change', updateMyPreview);
-  document.getElementById('incoming-my-card').addEventListener('change', updateIncomingMyPreview);
-  document.addEventListener('click', function startOnClick() { startMusic(); document.removeEventListener('click', startOnClick); }, { once: true });
-  init();
-});
+bgm.volume = 0;
+
+function startMusic() {
+  if (isMuted) return;
+  clearInterval(fadeInterval);
+  bgm.play().catch(() => {});
+  let v = bgm.volume;
+  fadeInterval = setInterval(() => {
+    v = Math.min(targetVolume, v + 0.02);
+    bgm.volume = v;
+    if (v >= targetVolume) clearInterval(fadeInterval);
+  }, 50);
+}
+
+function stopMusic() {
+  clearInterval(fadeInterval);
+  bgm.pause();
+  bgm.volume = 0;
+}
+
+function toggleMute() {
+  isMuted = !isMuted;
+  const btn = document.getElementById('mute-btn');
+  if (isMuted) {
+    stopMusic();
+    btn.textContent = '🔇';
+    btn.style.textDecoration = 'line-through';
+  } else {
+    btn.textContent = '🔊';
+    btn.style.textDecoration = 'none';
+    startMusic();
+  }
+}
+
+function setVolume(val) {
+  targetVolume = val / 100;
+  if (!isMuted) bgm.volume = targetVolume;
+  const slider = document.getElementById('vol-slider');
+  slider.style.background = `linear-gradient(to right, var(--red) 0%, var(--red) ${val}%, #333 ${val}%)`;
+}
+
+// Start music on first interaction
+document.addEventListener('click', function startOnClick() {
+  startMusic();
+  document.removeEventListener('click', startOnClick);
+}, { once: true });
+
+init();
 </script>
 </body>
 </html>
